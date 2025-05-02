@@ -2,19 +2,23 @@
 #ifndef INCLUDE_TPQUEUE_H_
 #define INCLUDE_TPQUEUE_H_
 
+#include <stdexcept>
+
 template<typename T>
 class TPQueue {
  private:
     struct Node {
         T data;
         Node* next;
-        explicit Node(const T& data, Node* next = nullptr)
+        explicit Node(const T& data, Node* next = nullptr) 
             : data(data), next(next) {}
     };
+    
     Node* head;
 
  public:
     TPQueue() : head(nullptr) {}
+    
     ~TPQueue() {
         while (head) {
             Node* temp = head;
@@ -30,7 +34,8 @@ class TPQueue {
         }
 
         Node* current = head;
-        while (current->next && current->next->data.prior >= item.prior) {
+        while (current->next && 
+               current->next->data.prior >= item.prior) {
             current = current->next;
         }
         current->next = new Node(item, current->next);
@@ -38,8 +43,9 @@ class TPQueue {
 
     T pop() {
         if (!head) {
-            throw "Queue is empty";
+            throw std::out_of_range("Queue is empty");
         }
+        
         T result = head->data;
         Node* temp = head;
         head = head->next;
@@ -50,6 +56,9 @@ class TPQueue {
     bool isEmpty() const {
         return head == nullptr;
     }
+
+    TPQueue(const TPQueue&) = delete;
+    TPQueue& operator=(const TPQueue&) = delete;
 };
 
 struct SYM {
